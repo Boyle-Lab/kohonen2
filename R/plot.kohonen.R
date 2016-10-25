@@ -50,7 +50,8 @@
            zlim = zlim, heatkey = heatkey,
            contin = contin, keepMargins = keepMargins, 
            heatkeywidth = heatkeywidth,
-	   heatkeyposition = heatkeyposition, fg = fg, ...),
+	   heatkeyposition = heatkeyposition, fg = fg,
+	   heatkeyname = heatkeyname, heatkeyname2 = heatkeyname2, ...),
          codes = plot.kohcodes(x = x, main = main,
            palette.name = palette.name, bgcol = bgcol,
            whatmap = whatmap, codeRendering = codeRendering,
@@ -183,7 +184,8 @@ plot.kohmapping <- function(x, classif, main, labels, pchs, bgcol,
 
 plot.kohprop <- function(x, property, main, palette.name = NULL, ncolors,
                          zlim = NULL, heatkey, contin, keepMargins,
-                         heatkeywidth, fg = "black", heatkeyposition = "left", ...)
+                         heatkeywidth, fg = "black", heatkeyposition = "left",
+			 heatkeyname = NULL, heatkeyname2 = NULL, ...)
 {
   if (is.null(main)) main <- "Property plot"
   if (is.null(palette.name)) palette.name <- heat.colors
@@ -265,11 +267,13 @@ plot.kohprop <- function(x, property, main, palette.name = NULL, ncolors,
     if (length(unique(property)) < 10 & !contin) {
       plot.heatkey(x, zlim, bgcol, labels = levels(as.factor(property)),
                    contin = contin, heatkeywidth = heatkeywidth,
-		   position = heatkeyposition, ...)
+		   position = heatkeyposition, heatkeyname = heatkeyname,
+		   heatkeynametop = heatkeyname2, ...)
     } else {
       plot.heatkey(x, zlim, bgcol, labels = NULL, contin = contin,
                    heatkeywidth = heatkeywidth,
-		   position = heatkeyposition, ...)
+		   position = heatkeyposition, heatkeyname = heatkeyname,
+		   heatkeynametop = heatkeyname2, ...)
     }
   }
 
@@ -1574,4 +1578,11 @@ plot.heatkey.somclasses = function(x, zlim, bgcol, labels, heatkeywidth = 0.5, .
          yleft[-1] - 0.5*diff(yleft[1:2]),
          labels,
          xpd = TRUE, adj=1, cex=cex)
+}
+
+### Get a set of z limits centered around zero
+### Added by Adam Diehl
+get_zero_centered_zlim = function(x) {
+    lim = max(c(abs(max(x, na.rm = TRUE)), abs(min(x, na.rm = TRUE))))
+    return(c(-lim, lim))
 }
